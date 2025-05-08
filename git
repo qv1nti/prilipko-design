@@ -1,0 +1,11 @@
+[33mcommit 61fac5e59e4583fc1cff445165844308c7d7e8af[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Max <prylypkoms@nuft.edu.ua>
+Date:   Thu May 8 18:19:00 2025 +0300
+
+    Додав базову структуру бекенду: Express + MongoDB
+
+[33mcommit 84ed80cba69124b7ec6ef98ca3bb4e2d950fbf23[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: Max <prylypkoms@nuft.edu.ua>
+Date:   Thu May 8 18:07:33 2025 +0300
+
+    Початкова структура проєкту
