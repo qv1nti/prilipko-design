@@ -36,17 +36,19 @@ const Login = () => {
     try {
   const url = isLogin ? "/api/auth/login" : "/api/auth/register";
 
-  const payload = isLogin
-    ? {
-        email: formData.email,
-        password: formData.password,
-      }
-    : {
-        name: `${formData.firstName} ${formData.lastName}`,
-        email: formData.email,
-        password: formData.password,
-        phone: formData.phoneNumber,
-      };
+ const payload = isLogin
+  ? {
+      email: formData.email,
+      password: formData.password,
+    }
+  : {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      password: formData.password,
+      phone: formData.phoneNumber,
+    };
+
 
   const res = await axios.post(url, payload);
 
