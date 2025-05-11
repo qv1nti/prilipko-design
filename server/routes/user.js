@@ -8,14 +8,18 @@ const auth = require("../middleware/authMiddleware");
 // @access  Private
 router.get("/profile", auth, async (req, res) => {
   try {
-    console.log("AUTH USER:", req.user); // для дебагу
-
-    const user = await User.findById(req.user.id).select("-password");
+    const user = await User.findById(req.userId).select("-password");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json(user);
+    res.json({
+      id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      phone: user.phone
+    });
   } catch (err) {
     console.error("Error loading profile:", err.message);
     res.status(500).json({ message: "Server error" });
@@ -27,19 +31,22 @@ router.get("/profile", auth, async (req, res) => {
 // @access  Private
 router.put("/profile", auth, async (req, res) => {
   try {
-    const { name, email, phone } = req.body;
+    const { firstName, lastName, email, phone } = req.body;
 
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    user.name = name || user.name;
+    user.firstName = firstName || user.firstName;
+    user.lastName = lastName || user.lastName;
     user.email = email || user.email;
     user.phone = phone || user.phone;
 
     await user.save();
 
     res.json({
-      name: user.name,
+      message: "Profile updated successfully",
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       phone: user.phone
     });

@@ -3,8 +3,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/user"); // 🔽 новий маршрут профілю
+const authRoutes = require("./routes/authRoutes");  // логін / реєстрація / Профіль (GET /profile)
+const userRoutes = require("./routes/user");        // оновлення профілю (PUT /profile)
 
 const app = express();
 
@@ -19,8 +19,8 @@ mongoose
   .catch((err) => console.error("MongoDB error:", err));
 
 // Роутинги
-app.use("/api/auth", authRoutes);     // логін / реєстрація
-app.use("/api/user", userRoutes);     // профіль користувача (GET/PUT /profile)
+app.use("/api/auth", authRoutes);   // /api/auth/profile (GET)
+app.use("/api/user", userRoutes);   // /api/user/profile (PUT)
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
