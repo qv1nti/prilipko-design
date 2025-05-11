@@ -9,12 +9,30 @@ const auth = require("../middleware/authMiddleware");
 router.post('/register', async (req, res) => {
   const { firstName, lastName, email, phone, password } = req.body;
 
+  // базова валідація
+  if (!firstName || !lastName || !email || !password) {
+    return res.status(400).json({ message: "Будь ласка, заповніть всі обов'язкові поля" });
+  }
+
+  if (password.length < 6) {
+    return res.status(400).json({ message: "Пароль має містити щонайменше 6 символів" });
+  }
+
   try {
+    // перевірка на унікальність email
     const existingUser = await User.findOne({ email });
-    if (existingUser)
-      return res.status(400).json({ message: 'Користувач з таким email вже існує' });
+    if (existingUser) {
+      return res.status(400).json({ message: "Користувач з таким email вже існує" });
+    }
+
+    // перевірка на унікальність телефону
+    const existingPhone = await User.findOne({ phone });
+    if (existingPhone) {
+      return res.status(400).json({ message: "Користувач з таким номером телефону вже існує" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = new User({
       firstName,
       lastName,
