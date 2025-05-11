@@ -12,34 +12,30 @@ const Profile = () => {
     email: "",
     phone: ""
   });
-
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
   // Отримання даних профілю
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       try {
         const res = await axios.get("/api/auth/profile", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
-          }
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
         });
         setUserData(res.data);
         setFormData(res.data);
-      } catch (err) {
+      } catch {
         setError("Failed to load profile.");
       }
-    };
-    fetchData();
+    })();
   }, []);
 
-  // Обробка змін у формі
   const handleChange = (e) => {
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value
     }));
+    setError("");
   };
 
   // Відправка змін профілю
@@ -47,17 +43,20 @@ const Profile = () => {
     e.preventDefault();
     setError("");
     setSuccess(false);
+
     try {
-      await axios.put("/api/user/profile", formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      });
+      const res = await axios.put(
+        "/api/user/profile",
+        formData,
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+      );
       setSuccess(true);
       setEditing(false);
-      setUserData(formData);
+      setUserData(res.data);
     } catch (err) {
-      setError("Failed to update profile.");
+      // Показуємо конкретне повідомлення з бекенду
+      const msg = err.response?.data?.message || "Failed to update profile.";
+      setError(msg);
     }
   };
 
@@ -67,23 +66,59 @@ const Profile = () => {
         <h2>MY ACCOUNT</h2>
 
         <div className="section">
-          <h3>PROFILE <span onClick={() => setEditing(!editing)} className="edit-link">Edit</span></h3>
+          <h3>
+            PROFILE{" "}
+            <span
+              className="edit-link"
+              onClick={() => {
+                setEditing(true);
+                setSuccess(false);
+                setError("");
+              }}
+            >
+              Edit
+            </span>
+          </h3>
 
           {editing ? (
             <form onSubmit={handleSubmit}>
               <label>First Name:</label>
-              <input name="firstName" value={formData.firstName} onChange={handleChange} required />
+              <input
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+              />
 
               <label>Last Name:</label>
-              <input name="lastName" value={formData.lastName} onChange={handleChange} required />
+              <input
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+              />
 
               <label>Email:</label>
-              <input name="email" type="email" value={formData.email} onChange={handleChange} required />
+              <input
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
 
               <label>Phone:</label>
-              <input name="phone" type="tel" value={formData.phone} onChange={handleChange} required />
+              <input
+                name="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+              />
 
               <button type="submit">Save</button>
+
+              {error && <p className="error">{error}</p>}
             </form>
           ) : (
             <div className="profile-info">
@@ -101,7 +136,6 @@ const Profile = () => {
         </div>
 
         {success && <p className="success">Profile updated!</p>}
-        {error && <p className="error">{error}</p>}
       </div>
     </Layout>
   );
