@@ -1,13 +1,21 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 import "./Header.scss";
-import mainLogo from "../../img/main_logo.svg"
-
+import mainLogo from "../../img/main_logo.svg";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuth();
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
 
   return (
     <header className="prilipko-header">
@@ -23,10 +31,20 @@ const Header = () => {
 
       <div className="prilipko-topbar">
         <a className="header_middle_logo" href="/">
-            <img src={mainLogo} alt="Prilipko Design" />
+          <img src={mainLogo} alt="Prilipko Design" />
         </a>
+
         <div className="topbar-links">
-          <Link to="/login">LOGIN</Link>
+          {isAuthenticated ? (
+            <div className="user-dropdown">
+              <Link to="/profile">{"MY ACCOUNT" || "PROFILE"}</Link>
+              <div className="logout-hover">
+                <button onClick={handleLogout}>LOGOUT</button>
+              </div>
+            </div>
+          ) : (
+            <Link to="/login">LOGIN</Link>
+          )}
           <span>/</span>
           <Link to="/bag">BAG 0</Link>
         </div>
