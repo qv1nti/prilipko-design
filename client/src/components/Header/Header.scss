@@ -1,25 +1,102 @@
-.header {
+.prilipko-header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 40px;
-  background-color: #000;
-  color: #fff;
+  background: white;
+  padding: 0 40px;
+  height: 80px;
+  font-family: "Arial", sans-serif;
 
-  &__logo {
-    font-size: 24px;
-    font-weight: bold;
+  .menu-toggle {
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 1001;
+    display: block;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+  }
+}
+
+.prilipko-sidebar {
+  position: fixed;
+  top: 0;
+  left: -240px;
+  width: 240px;
+  height: 100%;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 60px;
+  transition: left 0.3s ease-in-out;
+  z-index: 1000;
+
+  &.open {
+    left: 0;
   }
 
-  &__nav {
+  .sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
     a {
-      color: #fff;
+      font-size: 14px;
+      color: black;
       text-decoration: none;
-      margin-left: 20px;
+      font-weight: bold;
 
       &:hover {
         text-decoration: underline;
       }
+    }
+  }
+}
+
+.prilipko-topbar {
+  position: relative;
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+
+  .header_middle_logo {
+    margin-top: 10px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+  img {
+    height: 80px;
+    object-fit: contain;
+  }
+}
+
+
+  .topbar-links {
+    font-size: 14px;
+    font-weight: bold;
+
+    a {
+      color: black;
+      text-decoration: none;
+      margin: 0 5px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    span {
+      margin: 0 5px;
     }
   }
 }

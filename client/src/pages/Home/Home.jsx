@@ -1,17 +1,14 @@
 import React from "react";
-import Header from "../../components/Header/Header";
-import Footer from "../../components/Footer/Footer";
+import Layout from "../../layout/Layout";
 import "./Home.scss";
 
 export default function Home() {
   return (
-    <div className="app app_homepage">
-      <Header />
+    <Layout>
       <div className="content_wrapper">
         <h1>Головна сторінка</h1>
         <p>Ласкаво просимо до Prilipko Design!</p>
       </div>
-      <Footer />
-    </div>
+    </Layout>
   );
 }
