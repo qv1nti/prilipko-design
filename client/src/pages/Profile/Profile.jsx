@@ -5,17 +5,25 @@ import "./Profile.scss";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
-  const [editing, setEditing] = useState(false);
+  const [editingProfile, setEditingProfile] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phone: ""
   });
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
+  const [profileError, setProfileError] = useState("");
+  const [profileSuccess, setProfileSuccess] = useState(false);
 
-  // Отримання даних профілю
+  const [editingPass, setEditingPass] = useState(false);
+  const [passData, setPassData] = useState({
+    currentPassword: "",
+    newPassword: ""
+  });
+  const [passError, setPassError] = useState("");
+  const [passSuccess, setPassSuccess] = useState(false);
+
+  // Завантажуємо профіль
   useEffect(() => {
     (async () => {
       try {
@@ -25,38 +33,61 @@ const Profile = () => {
         setUserData(res.data);
         setFormData(res.data);
       } catch {
-        setError("Failed to load profile.");
+        setProfileError("Не вдалося завантажити профіль");
       }
     })();
   }, []);
 
-  const handleChange = (e) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-    setError("");
+  // загальні зміни полів профілю
+  const handleProfileChange = e => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    setProfileError("");
   };
 
-  // Відправка змін профілю
-  const handleSubmit = async (e) => {
+  // оновлення профілю
+  const handleProfileSubmit = async e => {
     e.preventDefault();
-    setError("");
-    setSuccess(false);
-
+    setProfileError("");
+    setProfileSuccess(false);
     try {
       const res = await axios.put(
         "/api/user/profile",
         formData,
         { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
       );
-      setSuccess(true);
-      setEditing(false);
+      setProfileSuccess(true);
+      setEditingProfile(false);
       setUserData(res.data);
     } catch (err) {
-      // Показуємо конкретне повідомлення з бекенду
-      const msg = err.response?.data?.message || "Failed to update profile.";
-      setError(msg);
+      setProfileError(err.response?.data?.message || "Failed to update profile.");
+    }
+  };
+
+  // зміни полів пароля
+  const handlePassChange = e => {
+    const { name, value } = e.target;
+    setPassData(prev => ({ ...prev, [name]: value }));
+    setPassError("");
+  };
+
+  // оновлення пароля
+  const handlePassSubmit = async e => {
+    e.preventDefault();
+    setPassError("");
+    setPassSuccess(false);
+
+    try {
+      await axios.put(
+        "/api/user/password",
+        passData,
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+      );
+      setPassSuccess(true);
+      setEditingPass(false);
+      setPassData({ currentPassword: "", newPassword: "" });
+    } catch (err) {
+      setPassError(err.response?.data?.message || "Failed to update password.");
     }
   };
 
@@ -65,28 +96,29 @@ const Profile = () => {
       <div className="profile-container">
         <h2>MY ACCOUNT</h2>
 
+        {/* ==== PROFILE ==== */}
         <div className="section">
           <h3>
             PROFILE{" "}
             <span
               className="edit-link"
               onClick={() => {
-                setEditing(true);
-                setSuccess(false);
-                setError("");
+                setEditingProfile(!editingProfile);
+                setProfileSuccess(false);
+                setProfileError("");
               }}
             >
-              Edit
+              {editingProfile ? "Cancel" : "Edit"}
             </span>
           </h3>
 
-          {editing ? (
-            <form onSubmit={handleSubmit}>
+          {editingProfile ? (
+            <form onSubmit={handleProfileSubmit}>
               <label>First Name:</label>
               <input
                 name="firstName"
                 value={formData.firstName}
-                onChange={handleChange}
+                onChange={handleProfileChange}
                 required
               />
 
@@ -94,7 +126,7 @@ const Profile = () => {
               <input
                 name="lastName"
                 value={formData.lastName}
-                onChange={handleChange}
+                onChange={handleProfileChange}
                 required
               />
 
@@ -103,7 +135,7 @@ const Profile = () => {
                 name="email"
                 type="email"
                 value={formData.email}
-                onChange={handleChange}
+                onChange={handleProfileChange}
                 required
               />
 
@@ -112,30 +144,77 @@ const Profile = () => {
                 name="phone"
                 type="tel"
                 value={formData.phone}
-                onChange={handleChange}
-                required
+                onChange={handleProfileChange}
               />
 
               <button type="submit">Save</button>
-
-              {error && <p className="error">{error}</p>}
+              {profileError && <p className="error">{profileError}</p>}
+              {profileSuccess && <p className="success">Profile updated!</p>}
             </form>
           ) : (
             <div className="profile-info">
-              <p><strong>First Name:</strong> {userData?.firstName}</p>
-              <p><strong>Last Name:</strong> {userData?.lastName}</p>
-              <p><strong>Email:</strong> {userData?.email}</p>
-              <p><strong>Phone:</strong> {userData?.phone}</p>
+              <p>
+                <strong>First Name:</strong> {userData?.firstName}
+              </p>
+              <p>
+                <strong>Last Name:</strong> {userData?.lastName}
+              </p>
+              <p>
+                <strong>Email:</strong> {userData?.email}
+              </p>
+              <p>
+                <strong>Phone:</strong> {userData?.phone}
+              </p>
             </div>
           )}
         </div>
 
+        {/* ==== PASSWORD ==== */}
         <div className="section">
-          <h3>PASSWORD <span className="edit-link">Edit</span></h3>
-          <p><strong>Password:</strong> ********</p>
-        </div>
+          <h3>
+            PASSWORD{" "}
+            <span
+              className="edit-link"
+              onClick={() => {
+                setEditingPass(!editingPass);
+                setPassSuccess(false);
+                setPassError("");
+              }}
+            >
+              {editingPass ? "Cancel" : "Change"}
+            </span>
+          </h3>
 
-        {success && <p className="success">Profile updated!</p>}
+          {editingPass ? (
+            <form onSubmit={handlePassSubmit}>
+              <label>Current Password:</label>
+              <input
+                name="currentPassword"
+                type="password"
+                value={passData.currentPassword}
+                onChange={handlePassChange}
+                required
+              />
+
+              <label>New Password:</label>
+              <input
+                name="newPassword"
+                type="password"
+                value={passData.newPassword}
+                onChange={handlePassChange}
+                required
+              />
+
+              <button type="submit">Update Password</button>
+              {passError && <p className="error">{passError}</p>}
+              {passSuccess && <p className="success">Password updated!</p>}
+            </form>
+          ) : (
+            <p>
+              <strong>Password:</strong> ********
+            </p>
+          )}
+        </div>
       </div>
     </Layout>
   );

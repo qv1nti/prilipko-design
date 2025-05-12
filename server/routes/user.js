@@ -38,6 +38,14 @@ router.put("/profile", auth, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Валідація формату номера телефону
+    const phoneRegex = /^\+380\d{9}$/;
+    if (phone && !phoneRegex.test(phone)) {
+      return res.status(400).json({
+        message: "Введіть коректний номер телефону у форматі +380XXXXXXXXX"
+      });
+    }
+
     // Перевірка унікальності email
     if (email && email !== user.email) {
       const emailTaken = await User.exists({ email, _id: { $ne: user._id } });
@@ -76,7 +84,6 @@ router.put("/profile", auth, async (req, res) => {
 
   } catch (err) {
     console.error("Error updating profile:", err);
-    // Обробка дублювання на рівні БД
     if (err.code === 11000 && err.keyValue) {
       const field = Object.keys(err.keyValue)[0];
       const msg =
@@ -110,20 +117,18 @@ router.put("/password", auth, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Перевіряємо поточний пароль
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Невірний поточний пароль" });
     }
 
-    // Хешуємо та зберігаємо новий пароль
     user.password = await bcrypt.hash(newPassword, 10);
     await user.save();
 
-    return res.json({ message: "Password updated successfully" });
+    return res.json({ message: "Пароль успішно оновлено" });
   } catch (err) {
     console.error("Error updating password:", err);
-    return res.status(500).json({ message: "Failed to update password" });
+    return res.status(500).json({ message: "Помилка при зміні пароля" });
   }
 });
 
