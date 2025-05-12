@@ -1,0 +1,113 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background-color: #1e1e2f;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.sidebar button {
+  background: none;
+  color: white;
+  border: none;
+  padding: 1rem;
+  text-align: left;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.sidebar button:hover {
+  background-color: #333;
+}
+
+.content {
+  flex: 1;
+  padding: 2rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; // 👈 важливо для однакової ширини колонок
+  margin-top: 1rem;
+  font-size: 15px;
+}
+
+th, td {
+  padding: 8px;
+  border: 1px solid #ccc;
+  text-align: left;
+  vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Фіксовані ширини колонок (налаштуй під себе)
+th:nth-child(1),
+td:nth-child(1) { width: 180px; }
+
+th:nth-child(2),
+td:nth-child(2) { width: 220px; }
+
+th:nth-child(3),
+td:nth-child(3) { width: 160px; }
+
+th:nth-child(4),
+td:nth-child(4) { width: 100px; }
+
+th:nth-child(5),
+td:nth-child(5) { width: 120px; }
+
+th:nth-child(6),
+td:nth-child(6) { width: 250px; }
+
+// Інпути — розтягуються по ширині td
+td input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  font-size: 14px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+}
+
+
+td input {
+  width: 100%;
+  min-width: 140px;
+  box-sizing: border-box;
+  padding: 4px 6px;
+  font-size: 14px;
+}
+
+td input:not(:last-child) {
+  margin-bottom: 4px;
+}
+
+button {
+  margin: 2px 4px 2px 0;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.sidebar button {
+  font-weight: bold;
+}
+
+.name-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.name-editing {
+  vertical-align: top; 
+}
