@@ -1,9 +1,13 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import PrivateRoute from "./components/PrivateRoute";
+import PrivateRoute from "./components/Routes/PrivateRoute";
+import AdminRoute from "./components/Routes/AdminRoute";
+import AdminPanel from "./pages/Admin/Admin";
 import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
 import Profile from "./pages/Profile/Profile";
+
+
 
 function App() {
   return (
@@ -20,6 +24,9 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="/admin" element={<AdminRoute />}>
+          <Route index element={<AdminPanel />} />
+        </Route>
       </Routes>
     </Router>
   );

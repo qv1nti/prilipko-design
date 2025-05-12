@@ -58,10 +58,14 @@
   }
 
   .success {
-    color: green;
-  }
+  color: green;
+  margin-top: 8px;
+  font-size: 0.95rem;
+}
 
-  .error {
-    color: red;
-  }
+.error {
+  color: red;
+  margin-top: 8px;
+  font-size: 0.95rem;
+}
 }

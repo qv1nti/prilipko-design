@@ -4,6 +4,12 @@ import axios from "axios";
 import Layout from "../../layout/Layout";
 import "./Login.scss";
 
+// ✅ Перевірка формату українського телефону
+const isValidPhone = (phone) => {
+  const regex = /^\+380\d{9}$/;
+  return regex.test(phone);
+};
+
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
@@ -28,40 +34,51 @@ const Login = () => {
     e.preventDefault();
     setError("");
 
-    if (!isLogin && formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match.");
-      return;
+    // 🔐 Валідація для реєстрації
+    if (!isLogin) {
+      if (formData.password !== formData.confirmPassword) {
+        setError("Passwords do not match.");
+        return;
+      }
+
+      if (!isValidPhone(formData.phoneNumber)) {
+        setError("Телефон має бути у форматі +380XXXXXXXXX");
+        return;
+      }
     }
 
     try {
-  const url = isLogin ? "/api/auth/login" : "/api/auth/register";
+      const url = isLogin ? "/api/auth/login" : "/api/auth/register";
 
- const payload = isLogin
-  ? {
-      email: formData.email,
-      password: formData.password,
+      const payload = isLogin
+        ? {
+            email: formData.email,
+            password: formData.password,
+          }
+        : {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            password: formData.password,
+            phone: formData.phoneNumber,
+          };
+
+      const res = await axios.post(url, payload);
+      const { token, user } = res.data;
+
+      // 💾 Збереження в localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      // 🔁 Перенаправлення за роллю
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/profile");
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "An error occurred");
     }
-  : {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      password: formData.password,
-      phone: formData.phoneNumber,
-    };
-
-
-  const res = await axios.post(url, payload);
-
-  const { token, user } = res.data;
-
-  localStorage.setItem("token", token);
-  localStorage.setItem("user", JSON.stringify(user));
-
-  navigate("/profile");
-} catch (err) {
-  setError(err.response?.data?.message || "An error occurred");
-}
-
   };
 
   return (

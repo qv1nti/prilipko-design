@@ -2,12 +2,12 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const User = require("../models/User");
-const auth = require("../middleware/authMiddleware");
+const { authMiddleware } = require("../middleware/authMiddleware");
 
 // @desc    Отримати дані користувача
 // @route   GET /api/user/profile
 // @access  Private
-router.get("/profile", auth, async (req, res) => {
+router.get("/profile", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.userId).select("-password");
     if (!user) {
@@ -29,7 +29,7 @@ router.get("/profile", auth, async (req, res) => {
 // @desc    Оновити дані користувача
 // @route   PUT /api/user/profile
 // @access  Private
-router.put("/profile", auth, async (req, res) => {
+router.put("/profile", authMiddleware, async (req, res) => {
   const { firstName, lastName, email, phone } = req.body;
 
   try {
@@ -99,7 +99,7 @@ router.put("/profile", auth, async (req, res) => {
 // @desc    Змінити пароль користувача
 // @route   PUT /api/user/password
 // @access  Private
-router.put("/password", auth, async (req, res) => {
+router.put("/password", authMiddleware, async (req, res) => {
   const { currentPassword, newPassword } = req.body;
 
   if (!currentPassword || !newPassword) {

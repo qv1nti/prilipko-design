@@ -3,13 +3,12 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const auth = require("../middleware/authMiddleware");
+const { authMiddleware } = require("../middleware/authMiddleware");
 
-// POST /api/auth/register
+// === POST /api/auth/register ===
 router.post('/register', async (req, res) => {
   const { firstName, lastName, email, phone, password } = req.body;
 
-  // базова валідація
   if (!firstName || !lastName || !email || !password) {
     return res.status(400).json({ message: "Будь ласка, заповніть всі обов'язкові поля" });
   }
@@ -19,16 +18,14 @@ router.post('/register', async (req, res) => {
   }
 
   try {
-    // перевірка на унікальність email
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Користувач з таким email вже існує" });
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
+      return res.status(400).json({ message: "Email вже використовується" });
     }
 
-    // перевірка на унікальність телефону
     const existingPhone = await User.findOne({ phone });
     if (existingPhone) {
-      return res.status(400).json({ message: "Користувач з таким номером телефону вже існує" });
+      return res.status(400).json({ message: "Телефон вже використовується" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -38,14 +35,17 @@ router.post('/register', async (req, res) => {
       lastName,
       email,
       phone,
-      password: hashedPassword
+      password: hashedPassword,
+      role: "user" // за замовчуванням
     });
 
     await newUser.save();
 
-    const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: '1d'
-    });
+    const token = jwt.sign(
+      { userId: newUser._id, role: newUser.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "100d" }
+    );
 
     res.status(201).json({
       message: 'Реєстрація успішна',
@@ -55,7 +55,8 @@ router.post('/register', async (req, res) => {
         firstName: newUser.firstName,
         lastName: newUser.lastName,
         email: newUser.email,
-        phone: newUser.phone
+        phone: newUser.phone,
+        role: newUser.role
       }
     });
   } catch (err) {
@@ -64,7 +65,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// POST /api/auth/login
+// === POST /api/auth/login ===
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -77,18 +78,22 @@ router.post('/login', async (req, res) => {
     if (!isMatch)
       return res.status(400).json({ message: 'Невірний пароль' });
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '1d'
-    });
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '100d' }
+    );
 
     res.json({
+      message: "Вхід успішний",
       token,
       user: {
         id: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        phone: user.phone
+        phone: user.phone,
+        role: user.role
       }
     });
   } catch (err) {
@@ -96,22 +101,23 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// GET /api/auth/profile
-router.get('/profile', auth, async (req, res) => {
+// === GET /api/auth/profile ===
+router.get('/profile', authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.userId).select('-password');
     if (!user)
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'Користувача не знайдено' });
 
     res.json({
       id: user._id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      phone: user.phone
+      phone: user.phone,
+      role: user.role
     });
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err.message });
+    res.status(500).json({ message: 'Помилка сервера', error: err.message });
   }
 });
 
