@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Layout from "../../layout/Layout";
-import { removeFromBag, clearBag } from "../../store/bagSlice";
+import { removeFromBag, updateQuantity } from "../../store/bagSlice";
 import "./Bag.scss";
 
 const Bag = () => {
@@ -25,7 +25,14 @@ const Bag = () => {
                   <h3>{item.name}</h3>
                   <p className="price">${item.price.toFixed(2)}</p>
                   <div className="quantity">
-                    x <input type="number" value={item.quantity} readOnly />
+                    x <input
+                        type="number"
+                        value={item.quantity}
+                        min="1"
+                        onChange={(e) =>
+                          dispatch(updateQuantity({ id: item._id, quantity: parseInt(e.target.value) }))
+                        }
+                      />
                   </div>
                 </div>
                 <button onClick={() => dispatch(removeFromBag(item._id))} className="remove">

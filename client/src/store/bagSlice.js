@@ -20,8 +20,15 @@ const bagSlice = createSlice({
     clearBag: (state) => {
       state.items = [];
     },
+    updateQuantity: (state, action) => {
+      const { id, quantity } = action.payload;
+      const item = state.items.find(item => item._id === id);
+      if (item) {
+        item.quantity = quantity < 1 ? 1 : quantity;
+      }
+    },
   },
 });
 
-export const { addToBag, removeFromBag, clearBag } = bagSlice.actions;
+export const { addToBag, removeFromBag, clearBag, updateQuantity } = bagSlice.actions;
 export default bagSlice.reducer;
