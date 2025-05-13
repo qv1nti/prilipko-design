@@ -8,6 +8,7 @@ const productSchema = new mongoose.Schema({
   image: String,
   inStock: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now },
+  gender: { type: String, enum: ["him", "her"], required: true, },
 });
 
 module.exports = mongoose.model("Product", productSchema);
