@@ -143,6 +143,11 @@ button {
   font-size: 14px;
 }
 
+textarea {
+  height: auto !important; /* або задай конкретну висоту */
+  min-height: 60px;
+}
+
 .modal-buttons {
   display: flex;
   gap: 10px;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useRef } from "react";
 import "./Admin.scss";
 
 const Admin = () => {
@@ -12,9 +13,11 @@ const Admin = () => {
   const [originalProduct, setOriginalProduct] = useState(null);
   const [editingProduct, setEditingProduct] = useState(null);
   const [dragImage, setDragImage] = useState(null);
-
+  const fileInputRef = useRef(null);
   // === USERS ===
   useEffect(() => {
+  const token = localStorage.getItem("token");
+
     if (section === "users") {
       axios
         .get("/api/admin/users", {
@@ -76,6 +79,24 @@ const Admin = () => {
     }
   };
 
+  const handleImageUpload = async (file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await axios.post("/api/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      const imageUrl = res.data.imagePath;
+      setDragImage(imageUrl);
+      setEditingProduct({ ...editingProduct, image: imageUrl });
+    } catch (err) {
+      console.error("Помилка завантаження зображення:", err);
+      alert("Помилка при завантаженні зображення");
+    }
+  };
+
   // === PRODUCTS ===
 
   const updateProductField = (index, field, value) => {
@@ -99,20 +120,34 @@ const Admin = () => {
   };
 
   const saveProduct = async (id, index, updated = null) => {
-    try {
-      const product = updated || products[index];
-      const { data } = await axios.put(`/api/admin/products/${id}`, product, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+  try {
+    const product = updated || products[index];
+
+    const res = product.isNew
+      ? await axios.post("/api/admin/products", product, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+      : await axios.put(`/api/admin/products/${id}`, product, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+    const newProduct = res.data;
+
+    if (product.isNew) {
+      setProducts((prev) => [...prev, { ...newProduct, isNew: false }]);
+    } else {
       setProducts((prev) =>
-        prev.map((p, i) => (i === index ? { ...data, isNew: false } : p))
+        prev.map((p, i) => (i === index ? { ...newProduct, isNew: false } : p))
       );
-      setEditingProduct(null);
-      setDragImage(null);
-    } catch (err) {
-      console.error("Помилка оновлення товару:", err);
     }
-  };
+
+    setEditingProduct(null);
+    setDragImage(null);
+  } catch (err) {
+    console.error("Помилка збереження товару:", err);
+  }
+};
+
 
 
   const deleteProduct = async (id) => {
@@ -232,19 +267,16 @@ const Admin = () => {
             <h2>🛍 Список товарів</h2>
             <button
               onClick={() =>
-                setProducts([
-                  ...products,
-                  {
-                    _id: Date.now(),
-                    name: "",
-                    description: "",
-                    price: 0,
-                    category: "",
-                    image: "",
-                    inStock: true,
-                    isNew: true,
-                  },
-                ])
+                setEditingProduct({
+                  _id: Date.now(),
+                  name: "",
+                  description: "",
+                  price: 0,
+                  category: "",
+                  image: "",
+                  inStock: true,
+                  isNew: true,
+                })
               }
             >
               ➕ Додати товар
@@ -384,23 +416,46 @@ const Admin = () => {
               />
 
               <label>Опис:</label>
-              <textarea
+              <textarea 
+                rows="5"
+                style={{ resize: "none", overflowY: "auto" }}
                 value={editingProduct.description}
                 onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })}
               />
 
+              <label>Стать:</label>
+              <select
+                value={editingProduct.gender || ""}
+                onChange={(e) =>
+                  setEditingProduct({ ...editingProduct, gender: e.target.value })
+                }
+              >
+                <option value="">Оберіть стать</option>
+                <option value="him">Для нього</option>
+                <option value="her">Для неї</option>
+              </select>
+
               <label>Фото:</label>
               <div
                 className="drop-zone"
+                onClick={() => fileInputRef.current.click()}
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={(e) => {
                   e.preventDefault();
                   const file = e.dataTransfer.files[0];
-                  const url = URL.createObjectURL(file);
-                  setDragImage(url);
-                  setEditingProduct({ ...editingProduct, image: url });
+                  if (file) handleImageUpload(file);
                 }}
               >
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) handleImageUpload(file);
+                  }}
+                />
                 {dragImage || editingProduct.image ? (
                   <img src={dragImage || editingProduct.image} alt="prev" />
                 ) : (

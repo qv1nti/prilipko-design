@@ -17,22 +17,36 @@ const Header = () => {
     navigate("/login");
   };
 
+  const [showShopSub, setShowShopSub] = useState(false);
+
   return (
     <header className="prilipko-header">
       <div className="menu-toggle" onClick={toggleMenu}>✶</div>
 
       <aside className={`prilipko-sidebar ${menuOpen ? "open" : ""}`}>
         <nav className="sidebar-menu">
-          <Link to="/shop" onClick={toggleMenu}>SHOP</Link>
+          <div className="shop-group">
+            <div className="shop-heading" onClick={() => setShowShopSub(!showShopSub)}>
+              SHOP
+            </div>
+            {showShopSub && (
+              <div className="shop-sub">
+                <Link to="/shop/him" onClick={toggleMenu}>FOR HIM</Link>
+                <Link to="/shop/her" onClick={toggleMenu}>FOR HER</Link>
+              </div>
+            )}
+          </div>
+
           <Link to="#" onClick={toggleMenu}>HISTORY</Link>
           <Link to="#" onClick={toggleMenu}>LOOKBOOK</Link>
         </nav>
       </aside>
 
+      <a className="header_middle_logo" href="/">
+        <img src={mainLogo} alt="Prilipko Design" />
+      </a>
+
       <div className="prilipko-topbar">
-        <a className="header_middle_logo" href="/">
-          <img src={mainLogo} alt="Prilipko Design" />
-        </a>
 
         <div className="topbar-links">
           {isAuthenticated ? (

@@ -6,8 +6,7 @@ import AdminPanel from "./pages/Admin/Admin";
 import Login from "./pages/Login/Login";
 import Home from "./pages/Home/Home";
 import Profile from "./pages/Profile/Profile";
-
-
+import Shop from "./pages/Shop/Shop";
 
 function App() {
   return (
@@ -15,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/shop/:gender?" element={<Shop />} />
         
         <Route
           path="/profile"

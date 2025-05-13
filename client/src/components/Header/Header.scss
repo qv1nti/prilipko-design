@@ -1,24 +1,21 @@
 .prilipko-header {
   position: relative;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: white;
-  padding: 0 40px;
-  height: 80px;
   font-family: "Arial", sans-serif;
-
-  .menu-toggle {
-    font-size: 20px;
-    cursor: pointer;
-    z-index: 1001;
-    display: block;
-    position: absolute;
-    top: 20px;
-    left: 20px;
-  }
+  z-index: 999;
 }
 
+// ✶ кнопка меню
+.menu-toggle {
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 1001;
+  display: block;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+}
+
+// Сайдбар
 .prilipko-sidebar {
   position: fixed;
   top: 0;
@@ -28,8 +25,9 @@
   background: white;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding-top: 60px;
+  align-items: flex-start;
+  padding-top: 80px;
+  padding-left: 20px;
   transition: left 0.3s ease-in-out;
   z-index: 1000;
 
@@ -38,52 +36,82 @@
   }
 
   .sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  padding-left: 20px;
+
+  .shop-heading {
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: black;
+    letter-spacing: 1px;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .shop-sub {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
+    padding-left: 12px;
+    margin-top: 5px;
 
     a {
-      font-size: 14px;
-      color: black;
+      font-size: 13px;
+      font-weight: normal;
+      color: #111;
       text-decoration: none;
-      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
 
       &:hover {
         text-decoration: underline;
       }
     }
   }
-}
 
-.prilipko-topbar {
-  position: relative;
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  height: 100%;
+  a {
+    font-size: 14px;
+    font-weight: bold;
+    color: black;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
 
-  .header_middle_logo {
-    margin-top: 10px;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-
-  img {
-    height: 80px;
-    object-fit: contain;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
+}
+
+// Topbar — фіксований правий верхній блок
+.prilipko-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: transparent;
+  height: 80px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 40px;
+  z-index: 998;
 
   .topbar-links {
     font-size: 14px;
     font-weight: bold;
+    display: flex;
+    align-items: center;
 
     a {
       color: black;
@@ -94,61 +122,74 @@
         text-decoration: underline;
       }
     }
+
     .logout-btn {
-        background: none;
-        border: none;
+      background: none;
+      border: none;
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+      padding: 0;
+      margin-left: 0.5rem;
+      text-decoration: underline;
+    }
+
+    .user-dropdown {
+      position: relative;
+      display: inline-block;
+
+      a {
+        text-decoration: none;
         color: inherit;
+        font-weight: 600;
+      }
+
+      .logout-hover {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: -7px;
+        background: white;
+        padding: 6px 12px;
+        white-space: nowrap;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      &:hover .logout-hover {
+        display: block;
+      }
+
+      .logout-hover button {
+        background: transparent;
+        border: none;
+        color: #333;
         font: inherit;
         cursor: pointer;
         padding: 0;
-        margin-left: 0.5rem;
-        text-decoration: underline;
+
+        &:hover {
+          color: #c00;
+        }
+      }
     }
-    .user-dropdown {
-  position: relative;
-  display: inline-block;
-
-  a {
-    text-decoration: none;
-    color: inherit;
-    font-weight: 600;
-  }
-
-  .logout-hover {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: white;
-    padding: 6px 12px;
-    white-space: nowrap;
-    border-radius: 6px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  &:hover .logout-hover {
-    display: block;
-    left: -7px;
-  }
-
-  .logout-hover button {
-    background: transparent;
-    border: none;
-    color: #333;
-    font: inherit;
-    cursor: pointer;
-    padding: 0;
-  }
-
-  .logout-hover button:hover {
-    color: #c00;
-  }
-}
-
-
 
     span {
       margin: 0 5px;
     }
+  }
+}
+
+// Логотип по центру сторінки — НЕ фіксований
+.header_middle_logo {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  text-align: center;
+
+  img {
+    height: 80px;
+    object-fit: contain;
+    z-index: 1000;
   }
 }
