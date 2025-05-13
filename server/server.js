@@ -6,6 +6,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");  // логін / реєстрація / Профіль (GET /profile)
 const userRoutes = require("./routes/user");        
 const adminRoutes = require("./routes/admin");
+const adminProductsRoutes = require("./routes/adminProducts");
 
 const app = express();
 
@@ -23,6 +24,7 @@ mongoose
 app.use("/api/auth", authRoutes);   // /api/auth/profile (GET)
 app.use("/api/user", userRoutes);   // /api/user/profile (PUT)
 app.use("/api/admin", adminRoutes); // /api/admin
+app.use("/api/admin/products", adminProductsRoutes); //api/admin/products
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
