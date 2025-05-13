@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import useAuth from "../../hooks/useAuth";
 import "./Header.scss";
 import mainLogo from "../../img/main_logo.svg";
@@ -7,7 +8,7 @@ import mainLogo from "../../img/main_logo.svg";
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
@@ -18,6 +19,8 @@ const Header = () => {
   };
 
   const [showShopSub, setShowShopSub] = useState(false);
+  const items = useSelector((state) => state.bag.items);
+  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <header className="prilipko-header">
@@ -60,7 +63,9 @@ const Header = () => {
             <Link to="/login">LOGIN</Link>
           )}
           <span>/</span>
-          <Link to="/bag">BAG 0</Link>
+          <Link to="/bag" className="bag-link">
+            BAG {totalQuantity}
+          </Link>
         </div>
       </div>
     </header>

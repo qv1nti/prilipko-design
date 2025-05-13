@@ -1,0 +1,131 @@
+.bag-wrapper {
+  padding: 80px 40px;
+  background: #f4f4f4;
+  font-family: Arial, sans-serif;
+  color: #111;
+
+  h1 {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    border-bottom: 1px solid #aaa;
+    padding-bottom: 10px;
+  }
+
+  .bag-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 60px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
+  }
+
+  .bag-items {
+    flex: 2;
+  }
+
+  .bag-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding: 20px 0;
+
+    img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      margin-right: 30px;
+    }
+
+    .bag-info {
+      flex: 1;
+
+      h3 {
+        font-size: 16px;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+      }
+
+      .label {
+        color: crimson;
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .price {
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+
+      .quantity input {
+        width: 50px;
+        padding: 5px;
+        text-align: center;
+        border: 1px solid #aaa;
+      }
+    }
+
+    .remove {
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+    }
+  }
+
+  .bag-summary {
+    flex: 1;
+    border: 1px solid #000;
+    padding: 30px;
+    background: white;
+
+    .line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      font-size: 14px;
+
+      &.total {
+        font-weight: bold;
+        font-size: 16px;
+        margin-top: 20px;
+        border-top: 1px solid #aaa;
+        padding-top: 10px;
+      }
+    }
+
+    .checkout {
+      width: 100%;
+      padding: 12px;
+      background: #000;
+      color: white;
+      border: none;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .terms {
+      font-size: 11px;
+      margin-top: 15px;
+      color: #555;
+
+      a {
+        color: #555;
+        text-decoration: underline;
+      }
+    }
+
+    .continue {
+      display: inline-block;
+      margin-top: 20px;
+      font-size: 13px;
+      text-decoration: underline;
+      color: #333;
+    }
+  }
+}

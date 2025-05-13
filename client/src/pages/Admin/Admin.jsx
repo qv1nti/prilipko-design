@@ -416,9 +416,7 @@ const Admin = () => {
               />
 
               <label>Опис:</label>
-              <textarea 
-                rows="5"
-                style={{ resize: "none", overflowY: "auto" }}
+              <textarea
                 value={editingProduct.description}
                 onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })}
               />
