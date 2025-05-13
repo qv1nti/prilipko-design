@@ -7,6 +7,7 @@ const authRoutes = require("./routes/authRoutes");  // логін / реєстр
 const userRoutes = require("./routes/user");        
 const adminRoutes = require("./routes/admin");
 const adminProductsRoutes = require("./routes/adminProducts");
+const publicRoutes = require("./routes/publicProducts");
 
 const app = express();
 
@@ -25,6 +26,12 @@ app.use("/api/auth", authRoutes);   // /api/auth/profile (GET)
 app.use("/api/user", userRoutes);   // /api/user/profile (PUT)
 app.use("/api/admin", adminRoutes); // /api/admin
 app.use("/api/admin/products", adminProductsRoutes); //api/admin/products
+app.use("/api/products", publicRoutes); ///api/products
+
+const path = require("path");
+app.use("/api/upload", require("./routes/upload"));
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
