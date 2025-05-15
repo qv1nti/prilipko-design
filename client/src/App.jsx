@@ -5,6 +5,7 @@ import { loadUserFromToken } from "./store/authSlice";
 
 import PrivateRoute from "./components/Routes/PrivateRoute";
 import AdminRoute from "./components/Routes/AdminRoute";
+import PrivateRouteBag from "./components/Routes/PrivateRouteBag";
 
 import AdminPanel from "./pages/Admin/Admin";
 import Login from "./pages/Login/Login";
@@ -16,6 +17,7 @@ import Bag from "./pages/Bag/Bag";
 import Checkout from "./pages/Checkout/Checkout";
 import CheckoutEntry from "./pages/Checkout/CheckoutEntry";
 import CheckoutLogin from "./pages/Checkout/CheckoutLogin";
+import OrderSuccess from "./pages/Order/OrderSuccess";
 
 function App() {
   const dispatch = useDispatch();
@@ -39,13 +41,21 @@ function App() {
         <Route path="/bag" element={<Bag />} />
         <Route path="/checkout" element={<CheckoutEntry />} />
         <Route path="/checkout/login" element={<CheckoutLogin />} />
-        <Route path="/checkout/form" element={<Checkout />} />
+        <Route path="/order/success" element={<OrderSuccess />} />
         <Route
           path="/profile"
           element={
             <PrivateRoute>
               <Profile />
             </PrivateRoute>
+          }
+        />
+        <Route
+          path="/checkout/form"
+          element={
+            <PrivateRouteBag>
+              <Checkout />
+            </PrivateRouteBag>
           }
         />
         <Route path="/admin" element={<AdminRoute />}>

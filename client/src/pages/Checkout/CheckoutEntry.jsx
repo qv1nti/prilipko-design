@@ -7,12 +7,12 @@ const CheckoutEntry = () => {
   const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    if (user) {
-      navigate("/checkout/form");
-    } else {
-      navigate("/checkout/login");
-    }
-  }, [user, navigate]);
+  if (user) {
+    navigate("/checkout/form");
+  } else {
+    navigate("/checkout/login");
+  }
+}, [user, navigate]);
 
   return null;
 };

@@ -23,21 +23,47 @@ const Profile = () => {
   const [passError, setPassError] = useState("");
   const [passSuccess, setPassSuccess] = useState(false);
 
+  const [orders, setOrders] = useState([]);
+
+
   // Завантаження профілю
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setProfileError("Користувач не авторизований");
+        return;
+      }
+
       try {
-        const res = await axios.get("/api/auth/profile", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        setProfileError("");
+
+        // Завантаження профілю
+        const resProfile = await axios.get("/api/auth/profile", {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        setUserData(res.data);
-        setFormData(res.data);
-      } catch {
+        setUserData(resProfile.data);
+        setFormData(resProfile.data);
+      } catch (err) {
+        console.error("❌ Помилка завантаження профілю:", err);
         setProfileError("Не вдалося завантажити профіль");
       }
-    })();
-  }, []);
 
+      try {
+        // Завантаження замовлень
+        const resOrders = await axios.get("/api/orders/my", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setOrders(resOrders.data);
+      } catch (err) {
+        console.error("❌ Помилка завантаження замовлень:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+  
   // Обробка змін у формі профілю
   const handleProfileChange = e => {
     const { name, value } = e.target;
@@ -216,6 +242,25 @@ const Profile = () => {
               {passSuccess && <p className="success">Password updated!</p>}
             </>
           )}
+
+          <div className="profile-orders">
+            <h3>Мої замовлення</h3>
+            {orders.map((order) => (
+              <div key={order._id} className="order-card">
+                <div className="order-header">
+                  <div className="order-id">№ {order._id}</div>
+                  <div className={`order-status ${order.status}`}>{order.status}</div>
+                </div>
+                <div className="order-info">Сума: {order.total} грн</div>
+                <div className="order-info">Дата: {new Date(order.createdAt).toLocaleDateString()}</div>
+                <ul className="order-items">
+                  {order.items.map((item, i) => (
+                    <li key={i}>{item.name} × {item.quantity}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
 
         </div>
       </div >

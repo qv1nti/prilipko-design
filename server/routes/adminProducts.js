@@ -15,7 +15,7 @@ router.get("/", requiredAdmin, async (req, res) => {
 
 // POST — створення нового товару (адмін)
 router.post("/", requiredAdmin, async (req, res) => {
-  const { name, description, price, category, image, inStock } = req.body;
+  const { name, description, price, category, image, inStock, gender } = req.body;
 
   try {
     const product = new Product({
@@ -25,6 +25,7 @@ router.post("/", requiredAdmin, async (req, res) => {
       category,
       image,
       inStock,
+      gender,
     });
 
     await product.save();

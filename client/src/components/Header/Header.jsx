@@ -64,9 +64,11 @@ const Header = () => {
             <Link to="/login">LOGIN</Link>
           )}
           <span>/</span>
-          <Link to="/bag" className="bag-link">
-            BAG {totalQuantity}
-          </Link>
+          {totalQuantity > 0 ? (
+            <Link to="/bag" className="bag-link">BAG {totalQuantity}</Link>
+          ) : (
+            <span className="bag-link disabled">BAG 0</span>
+          )}
         </div>
       </div>
     </header>

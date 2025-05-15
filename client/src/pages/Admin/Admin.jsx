@@ -5,37 +5,47 @@ import "./Admin.scss";
 
 const Admin = () => {
   const [section, setSection] = useState("users");
+
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
+
   const [products, setProducts] = useState([]);
-  const token = localStorage.getItem("token");
+  
   const [editingProductIndex, setEditingProductIndex] = useState(null);
   const [originalProduct, setOriginalProduct] = useState(null);
   const [editingProduct, setEditingProduct] = useState(null);
+
   const [dragImage, setDragImage] = useState(null);
+
+  const [orders, setOrders] = useState([]); // список замовлень
+
   const fileInputRef = useRef(null);
+
+  const token = localStorage.getItem("token");
   // === USERS ===
   useEffect(() => {
-  const token = localStorage.getItem("token");
-
-    if (section === "users") {
-      axios
-        .get("/api/admin/users", {
+      if (section === "users") {
+        axios.get("/api/admin/users", {
           headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => setUsers(res.data))
-        .catch((err) => console.error("Помилка завантаження:", err));
-    }
+        }).then((res) => setUsers(res.data))
+          .catch((err) => console.error("Помилка користувачів:", err));
+      }
 
-    if (section === "products") {
-      axios
-        .get("/api/admin/products", {
+      if (section === "products") {
+        axios.get("/api/admin/products", {
           headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => setProducts(res.data))
-        .catch((err) => console.error("Помилка товарів:", err));
-    }
-  }, [section]);
+        }).then((res) => setProducts(res.data))
+          .catch((err) => console.error("Помилка товарів:", err));
+      }
+
+      if (section === "orders") {
+        axios.get("/api/orders", {
+          headers: { Authorization: `Bearer ${token}` },
+        }).then((res) => setOrders(res.data))
+          .catch((err) => console.error("Помилка замовлень:", err));
+      }
+    }, [section, token]);
+  
 
   const handleRoleChange = async (id, currentRole) => {
     const newRole = currentRole === "admin" ? "user" : "admin";
@@ -106,18 +116,21 @@ const Admin = () => {
   };
 
   const saveNewProduct = async (index) => {
-    try {
-      const product = products[index];
-      const { data } = await axios.post("/api/admin/products", product, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setProducts((prev) =>
-        prev.map((p, i) => (i === index ? { ...data, isNew: false } : p))
-      );
-    } catch (err) {
-      console.error("Помилка додавання товару:", err);
-    }
-  };
+  try {
+    const product = products[index];
+    const { isNew, _id, ...cleanProduct } = product;
+
+    const { data } = await axios.post("/api/admin/products", cleanProduct, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    setProducts((prev) =>
+      prev.map((p, i) => (i === index ? { ...data, isNew: false } : p))
+    );
+  } catch (err) {
+    console.error("Помилка додавання товару:", err.response?.data || err.message);
+  }
+};
 
   const saveProduct = async (id, index, updated = null) => {
   try {
@@ -148,8 +161,6 @@ const Admin = () => {
   }
 };
 
-
-
   const deleteProduct = async (id) => {
     try {
       await axios.delete(`/api/admin/products/${id}`, {
@@ -160,6 +171,83 @@ const Admin = () => {
       console.error("Помилка видалення товару:", err);
     }
   };
+
+  // === ORDERS ===
+
+  const saveOrder = async (id) => {
+    const order = orders.find((o) => o._id === id);
+    if (!order) return;
+
+    const { editing, ...dataToSend } = order;
+
+    // Перевірка на коректність items
+    if (
+      !Array.isArray(dataToSend.items) ||
+      dataToSend.items.length === 0 ||
+      !dataToSend.items.every(item => item.name && item.quantity > 0)
+    ) {
+      alert("Список товарів не валідний. Перевірте назви та кількість.");
+      return;
+    }
+
+    try {
+      console.log("Надсилаємо:", dataToSend);
+      await axios.put(`/api/orders/${id}`, dataToSend, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      toggleOrderEdit(id, false);
+    } catch (err) {
+      console.error("Помилка збереження замовлення:", err.response?.data || err.message);
+      alert("Не вдалося зберегти замовлення. Перевірте поля.");
+    }
+  };
+
+  const deleteOrder = async (id) => {
+    if (!window.confirm("Підтвердити видалення замовлення?")) return;
+    try {
+      await axios.delete(`/api/orders/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setOrders((prev) => prev.filter((o) => o._id !== id));
+    } catch (err) {
+      console.error("Помилка видалення:", err);
+      alert("Не вдалося видалити замовлення.");
+    }
+  };
+
+  const toggleOrderEdit = (id, status) => {
+    setOrders((prev) =>
+      prev.map((order) =>
+        order._id === id ? { ...order, editing: status } : order
+      )
+    );
+  };
+
+  const handleOrderChange = (id, field, value) => {
+    setOrders((prevOrders) =>
+      prevOrders.map((order) => {
+        if (order._id !== id) return order;
+
+        // Якщо редагується поле items з тексту
+        if (field === "items" && typeof value === "string") {
+          const parsedItems = value
+            .split("\n")
+            .map((line) => {
+              const [name, qty] = line.split("x");
+              return {
+                name: name?.trim() || "",
+                quantity: parseInt(qty) || 1
+              };
+            })
+            .filter(item => item.name !== "");
+          return { ...order, items: parsedItems };
+        }
+
+        return { ...order, [field]: value };
+      })
+    );
+  };
+
 
   return (
     <div className="admin-layout">
@@ -266,8 +354,8 @@ const Admin = () => {
           <div>
             <h2>🛍 Список товарів</h2>
             <button
-              onClick={() =>
-                setEditingProduct({
+              onClick={() => {
+                const newProduct = {
                   _id: Date.now(),
                   name: "",
                   description: "",
@@ -275,9 +363,11 @@ const Admin = () => {
                   category: "",
                   image: "",
                   inStock: true,
+                  gender: "",
                   isNew: true,
-                })
-              }
+                };
+                setEditingProduct(newProduct);
+              }}
             >
               ➕ Додати товар
             </button>
@@ -386,11 +476,125 @@ const Admin = () => {
 
         {/* === ЗАМОВЛЕННЯ === */}
         {section === "orders" && (
-          <div>
-            <h2>Замовлення</h2>
-            <p>Тут буде реалізація замовлень...</p>
-          </div>
-        )}
+        <div>
+          <h2>📦 Список замовлень</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Телефон</th>
+                <th>Товари</th>
+                <th>Сума</th>
+                <th>Статус</th>
+                <th>Дата</th>
+                <th>Дії</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order) => (
+                <tr key={order._id}>
+                  <td>
+                    {order.editing ? (
+                      <input
+                        type="email"
+                        value={order.email}
+                        onChange={(e) =>
+                          handleOrderChange(order._id, "email", e.target.value)
+                        }
+                      />
+                    ) : (
+                      order.email
+                    )}
+                  </td>
+                  <td>
+                    {order.editing ? (
+                      <input
+                        type="tel"
+                        value={order.phone}
+                        onChange={(e) =>
+                          handleOrderChange(order._id, "phone", e.target.value)
+                        }
+                      />
+                    ) : (
+                      order.phone
+                    )}
+                  </td>
+                  <td>
+                    {order.editing ? (
+                      <textarea
+                        value={order.items.map((i) => `${i.name} x${i.quantity}`).join("\n")}
+                        onChange={(e) =>
+                          handleOrderChange(order._id, "items", e.target.value
+                            .split("\n")
+                            .map((line) => {
+                              const [name, qty] = line.split("x");
+                              return { name: name.trim(), quantity: parseInt(qty) || 1 };
+                            })
+                          )
+                        }
+                        rows={order.items.length || 2}
+                      />
+                    ) : (
+                      <ul>
+                        {order.items.map((item, idx) => (
+                          <li key={idx}>
+                            {item.name} x{item.quantity}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </td>
+                  <td>
+                    {order.editing ? (
+                      <input
+                        type="number"
+                        value={order.total}
+                        onChange={(e) =>
+                          handleOrderChange(order._id, "total", Number(e.target.value))
+                        }
+                      />
+                    ) : (
+                      `${order.total} грн`
+                    )}
+                  </td>
+                  <td>
+                    {order.editing ? (
+                      <select
+                        value={order.status}
+                        onChange={(e) =>
+                          handleOrderChange(order._id, "status", e.target.value)
+                        }
+                      >
+                        <option value="Очікує">Очікує</option>
+                        <option value="Підтверджено">Підтверджено</option>
+                        <option value="Виконано">Виконано</option>
+                        <option value="Скасовано">Скасовано</option>
+                      </select>
+                    ) : (
+                      order.status
+                    )}
+                  </td>
+                  <td>{new Date(order.createdAt).toLocaleDateString()}</td>
+                  <td>
+                    {order.editing ? (
+                      <>
+                        <button onClick={() => saveOrder(order._id)}>Зберегти</button>
+                        <button onClick={() => toggleOrderEdit(order._id, false)}>Скасувати</button>
+                      </>
+                    ) : (
+                      <>
+                        <button onClick={() => toggleOrderEdit(order._id, true)}>✏️ Редагувати</button>
+                        <button onClick={() => deleteOrder(order._id)}>Видалити</button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
 
         {editingProduct && (
           <div className="modal-backdrop">

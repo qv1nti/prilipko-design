@@ -82,4 +82,19 @@ router.put("/:id", requiredAdmin, async (req, res) => {
   }
 });
 
+// DELETE /api/orders/:id — видалення замовлення (тільки для адміна)
+router.delete("/:id", requiredAdmin, async (req, res) => {
+  try {
+    const deletedOrder = await Order.findByIdAndDelete(req.params.id);
+
+    if (!deletedOrder) {
+      return res.status(404).json({ message: "Замовлення не знайдено" });
+    }
+
+    res.json({ message: "Замовлення видалено успішно" });
+  } catch (err) {
+    res.status(500).json({ message: "Помилка видалення замовлення", error: err.message });
+  }
+});
+
 module.exports = router;

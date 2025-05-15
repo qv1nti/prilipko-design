@@ -180,7 +180,6 @@
   }
 }
 
-// Логотип по центру сторінки — НЕ фіксований
 .header_middle_logo {
   display: flex;
   justify-content: center;
@@ -192,4 +191,8 @@
     object-fit: contain;
     z-index: 1000;
   }
+}
+
+.bag-link.disabled {
+  cursor: pointer;
 }

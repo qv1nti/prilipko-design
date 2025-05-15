@@ -4,6 +4,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../store/authSlice";
 import Layout from "../../layout/Layout";
+import { setGuest } from "../../store/guestSlice";
 import "./CheckoutLogin.scss";
 
 const CheckoutLogin = () => {
@@ -39,7 +40,13 @@ const CheckoutLogin = () => {
     <Layout>
       <div className="checkout-login">
         <h2>Guest Checkout</h2>
-        <button className="full-btn" onClick={() => navigate("/checkout/form")}>
+        <button
+          className="full-btn"
+          onClick={() => {
+            dispatch(setGuest(true)); 
+            navigate("/checkout/form");
+          }}
+        >
           Checkout as Guest
         </button>
 
