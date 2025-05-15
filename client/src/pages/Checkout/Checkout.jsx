@@ -110,13 +110,13 @@ const Checkout = () => {
             <ul>
               {items.map((item) => (
                 <li key={item._id}>
-                  {item.name} × {item.quantity} — ${item.price * item.quantity}
+                  {item.name} × {item.quantity} — {item.price * item.quantity} UAH
                 </li>
               ))}
             </ul>
             <hr />
             <p>
-              <strong>Total: ${total.toFixed(2)}</strong>
+              <strong>Total: {total.toFixed(2)} UAH</strong>
             </p>
           </div>
         </div>

@@ -37,7 +37,7 @@ const Bag = () => {
                 <img src={item.image} alt={item.name} />
                 <div className="bag-info">
                   <h3>{item.name}</h3>
-                  <p className="price">${item.price.toFixed(2)}</p>
+                  <p className="price">{item.price.toFixed(2)} UAH</p>
                   <div className="quantity">
                     x{" "}
                     <input
@@ -63,16 +63,16 @@ const Bag = () => {
           <div className="bag-summary">
             <div className="line">
               <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>{subtotal.toFixed(2)} UAH</span>
             </div>
             <div className="line">
               <span>Sales Tax</span>
-              <span>${tax.toFixed(2)}</span>
+              <span>{tax.toFixed(2)} UAH</span>
             </div>
             <div className="line total">
               <span>ESTIMATED TOTAL</span>
               <span>
-                <strong>${total.toFixed(2)}</strong>
+                <strong>{total.toFixed(2)} UAH</strong>
               </span>
             </div>
 

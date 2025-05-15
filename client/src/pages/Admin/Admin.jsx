@@ -327,15 +327,12 @@ const Admin = () => {
                     <td>
                       {editingUser?._id === u._id ? (
                         <>
-                          <button onClick={handleSaveEdit}>💾 Зберегти</button>
-                          <button onClick={() => setEditingUser(null)}>❌</button>
+                          <button onClick={handleSaveEdit}>Зберегти</button>
+                          <button onClick={() => setEditingUser(null)}>Відмінити</button>
                         </>
                       ) : (
                         <>
-                          <button onClick={() => setEditingUser(u)}>✏️</button>
-                          <button onClick={() => handleRoleChange(u._id, u.role)}>
-                            {u.role === "admin" ? "→ User" : "→ Admin"}
-                          </button>
+                          <button onClick={() => setEditingUser(u)}>Редагувати</button>
                           <button onClick={() => handleBlockToggle(u._id, u.isBlocked)}>
                             {u.isBlocked ? "Розблокувати" : "Заблокувати"}
                           </button>
@@ -352,7 +349,7 @@ const Admin = () => {
         {/* === ТОВАРИ === */}
         {section === "products" && (
           <div>
-            <h2>🛍 Список товарів</h2>
+            <h2>Список товарів</h2>
             <button
               onClick={() => {
                 const newProduct = {
@@ -369,7 +366,7 @@ const Admin = () => {
                 setEditingProduct(newProduct);
               }}
             >
-              ➕ Додати товар
+              + Додати товар
             </button>
             <table>
               <thead>
@@ -451,7 +448,7 @@ const Admin = () => {
                                 setOriginalProduct(null);
                               }}
                             >
-                              ❌ Скасувати
+                              Скасувати
                             </button>
                           </>
                         ) : (
@@ -460,10 +457,10 @@ const Admin = () => {
                               setEditingProduct({ ...products[i] });
                             }}
                           >
-                            ✏️ Редагувати
+                            Редагувати
                           </button>
                         )}
-                          <button onClick={() => deleteProduct(p._id)}>🗑️</button>
+                          <button onClick={() => deleteProduct(p._id)}>Видалити</button>
                         </>
                       )}
                     </td>
@@ -477,7 +474,7 @@ const Admin = () => {
         {/* === ЗАМОВЛЕННЯ === */}
         {section === "orders" && (
         <div>
-          <h2>📦 Список замовлень</h2>
+          <h2>Список замовлень</h2>
           <table>
             <thead>
               <tr>
@@ -583,7 +580,7 @@ const Admin = () => {
                       </>
                     ) : (
                       <>
-                        <button onClick={() => toggleOrderEdit(order._id, true)}>✏️ Редагувати</button>
+                        <button onClick={() => toggleOrderEdit(order._id, true)}>Редагувати</button>
                         <button onClick={() => deleteOrder(order._id)}>Видалити</button>
                       </>
                     )}
@@ -684,10 +681,10 @@ const Admin = () => {
                     setDragImage(null);
                   }}
                 >
-                  💾 Зберегти
+                  Зберегти
                 </button>
                 <button onClick={() => { setEditingProduct(null); setDragImage(null); }}>
-                  ❌ Скасувати
+                  Скасувати
                 </button>
               </div>
             </div>

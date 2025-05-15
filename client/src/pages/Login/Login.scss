@@ -1,3 +1,5 @@
+@import "../../styles/mixins";
+
 .login_container {
     display: flex;
     flex-direction: column;
@@ -50,26 +52,18 @@
         input {
             width: 100%;
             padding: 0.5rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: none;
             box-sizing: border-box;
+            outline: none;
+            transition: border-width 0.2s ease;
+            border: 1px solid #ccc;
+            &:focus {
+                border: 1px solid #000000;
+            }
         }
     }
 }
 
 .submit_button {
-    background: #000;
-    width: 100%;
-    background: #000;
-    color: #ccc;
-    height: 35px;
-    border-radius: 4px;
-    transition: background-color .3s ease;
-    font-size: 19px;
-}
-
-.submit_button:hover {
-    background-color: transparent;
-    border: 2px solid #000;
-    color: #000;
+    @include buttonStyle;
 }

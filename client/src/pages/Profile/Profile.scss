@@ -80,17 +80,9 @@
   }
 
   .order-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
     padding: 1rem 1.5rem;
     margin-bottom: 1rem;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-    transition: background 0.3s;
-
-    &:hover {
-      background: #f9f9f9;
-    }
+    border: 1px #000 solid;
 
     .order-header {
       display: flex;

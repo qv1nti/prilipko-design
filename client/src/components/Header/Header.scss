@@ -30,11 +30,14 @@
   align-items: flex-start;
   padding-top: 80px;
   padding-left: 20px;
-  transition: left 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
   z-index: 1000;
 
   &.open {
     left: 0;
+    background-color: rgba(210, 210, 210, 0.2);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px); 
   }
 
   .sidebar-menu {

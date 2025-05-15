@@ -1,12 +1,14 @@
+@import "../../styles/mixins";
+
 .checkout-page {
   padding: 80px 40px;
   font-family: Arial, sans-serif;
-  background: #f9f9f9;
 
   h1 {
     text-align: center;
     font-size: 28px;
     margin-bottom: 40px;
+    text-transform: uppercase;
   }
 
   .checkout-grid {
@@ -29,28 +31,21 @@
       padding: 10px;
       font-size: 14px;
       border: 1px solid #ccc;
+      outline: none;
+      transition: border-width 0.3s ease;
+        &:focus {
+          border: 1px solid #000000;
+        }
     }
 
     button {
-      padding: 12px;
-      background: black;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      text-transform: uppercase;
-      border: none;
-
-      &:hover {
-        background: #333;
-      }
+      @include buttonStyle;
     }
   }
 
   .checkout-summary {
     flex: 1;
-    background: white;
-    padding: 30px;
-    border: 1px solid #ccc;
+    padding: 5px;
 
     h2 {
       margin-bottom: 20px;
@@ -62,13 +57,13 @@
       margin-bottom: 20px;
 
       li {
-        font-size: 14px;
+        font-size: 18px;
         margin-bottom: 8px;
       }
     }
 
     p {
-      font-size: 14px;
+      font-size: 18px;
       margin: 8px 0;
     }
 

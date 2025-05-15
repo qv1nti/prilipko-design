@@ -1,0 +1,17 @@
+@mixin buttonStyle {
+  background: #000;
+  width: 100%;
+  color: #ccc;
+  height: 35px;
+  transition: background-color 0.3s ease-in-out;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+
+  &:hover {
+    background-color: transparent;
+    border: 2px solid #000;
+    color: #000;
+  }
+}

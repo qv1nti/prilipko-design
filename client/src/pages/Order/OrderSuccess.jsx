@@ -16,9 +16,9 @@ const OrderSuccess = () => {
     <Layout>
     <div className="order-success">
       <div className="order-box">
-        <h1>✅ Замовлення успішно створено</h1>
-        <p>Номер замовлення: <strong>{orderId}</strong></p>
-        <Link to="/" className="back-btn">Повернутись на головну</Link>
+        <h1>Order successfully created</h1>
+        <p>Order number: <strong>{orderId}</strong></p>
+        <Link to="/" className="back-btn">Return to home page</Link>
       </div>
     </div>
     </Layout>

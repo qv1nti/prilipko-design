@@ -1,8 +1,9 @@
+@import "../../styles/mixins";
+
 .product-page {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  background: #eee;
   font-family: "Arial", sans-serif;
   color: black;
   padding: 60px 40px;
@@ -11,7 +12,6 @@
     width: 600px;
     height: 600px;
     flex-shrink: 0;
-    background: white;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,8 +25,7 @@
   }
 
   .product-info {
-    max-width: 400px;
-    margin-left: 60px;
+    max-width: 700px;
 
     h1 {
       font-size: 28px;
@@ -39,12 +38,8 @@
     }
 
     .add-to-bag {
-      padding: 10px 20px;
-      border: 1px solid black;
-      background: transparent;
-      font-weight: bold;
-      cursor: pointer;
-      margin-bottom: 30px;
+      @include buttonStyle;
+      width: 100%;
     }
 
     h3 {
@@ -63,6 +58,11 @@
       background: none;
       border: none;
       color: black;
+      transition: all 0.3s ease-in-out;
+
+      &:hover {
+        opacity: 0.7;
+      }
     }
   }
 }
