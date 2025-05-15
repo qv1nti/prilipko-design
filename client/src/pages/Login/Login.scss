@@ -1,4 +1,5 @@
 @import "../../styles/mixins";
+@import "../../styles/breakpoints";
 
 .login_container {
     display: flex;
@@ -66,4 +67,10 @@
 
 .submit_button {
     @include buttonStyle;
+}
+
+@media (max-width: $mobile) {
+    .login_container {
+        width: 340px;
+    }
 }

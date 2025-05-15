@@ -250,7 +250,7 @@
     z-index: 1200;
   }
 
-  .prilipko-topbar .topbar-links .user-dropdown, span {
+  .prilipko-topbar .topbar-links span {
     display: none;
   }
 
@@ -260,6 +260,10 @@
 
   .prilipko-topbar {
     padding: 0 10px;
+  }
+
+  .prilipko-topbar .topbar-links .user-dropdown a {
+    display: none
   }
 
   .mobile-auth {

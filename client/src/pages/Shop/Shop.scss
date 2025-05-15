@@ -1,3 +1,5 @@
+@import "../../styles/breakpoints";
+
 .shop-page {
   padding: 2rem;
   max-width: 1200px;
@@ -37,18 +39,25 @@
   left: 0;
   right: 0;
   padding: 2rem 1rem;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(0, 0, 0, 0.6);
   opacity: 0;
   transition: opacity 0.3s ease;
   text-align: center;
   font-size: 18px;
-  color: #000;
+  color: #fff;
 }
 
 .product-tile:hover img {
-  transform: scale(1.03);
+  transform: scale(1.05);
 }
 
 .product-tile:hover .overlay {
   opacity: 1;
+}
+
+@media (max-width: $tablet) {
+  .shop-grid {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem;
+  }
 }

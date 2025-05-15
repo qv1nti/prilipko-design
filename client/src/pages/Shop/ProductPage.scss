@@ -1,4 +1,5 @@
 @import "../../styles/mixins";
+@import "../../styles/breakpoints";
 
 .product-page {
   display: flex;
@@ -87,5 +88,47 @@
     margin-top: 10px;
     font-size: 14px;
     line-height: 1.5;
+  }
+}
+
+@media (max-width: $laptop) {
+  
+}
+
+@media (max-width: $tablet) {
+  .product-page {
+    display: grid;
+  }
+
+  .product-image {
+    max-width: 600px;
+  }
+
+  .product-info {
+    text-align: center;
+  }
+
+  li {
+    list-style-type: none;
+  }
+
+  .product-page .product-info .add-to-bag {
+    width: 60%;
+  }
+
+  .product-page .product-info h1 {
+    font-size: 20px;
+    margin-top: 20px;
+  }
+
+  .product-page .product-info .price {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: $mobile) {
+  .product-page .product-image {
+    width: 500px;
+    height: 500px;
   }
 }

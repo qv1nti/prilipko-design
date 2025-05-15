@@ -3,13 +3,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Layout from "../../layout/Layout";
 import { useDispatch } from "react-redux";
-import { addToBag } from "../../store/bagSlice"; // шляхи за потребою адаптуй
+import { addToBag } from "../../store/bagSlice";
 import "./ProductPage.scss";
 
 const ProductPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // ⬅️ redux dispatcher
+  const dispatch = useDispatch(); 
   const [product, setProduct] = useState(null);
   const [openSections, setOpenSections] = useState({
     care: false,

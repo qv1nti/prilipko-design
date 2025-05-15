@@ -1,3 +1,6 @@
+@import "../../styles/mixins";
+@import "../../styles/breakpoints";
+
 .profile-container {
   padding: 2rem;
   color: #333;
@@ -41,18 +44,22 @@
       input {
         padding: 0.5rem;
         margin-top: 0.2rem;
-        margin-bottom: 1rem;
+        margin-bottom: 0.2rem;
+        width: 100%;
+        border: none;
+        box-sizing: border-box;
+        outline: none;
+        transition: border-width 0.2s ease;
         border: 1px solid #ccc;
-        border-radius: 4px;
+          &:focus {
+            border: 1px solid #000000;
+          }        
       }
 
       button {
-        padding: 0.6rem;
-        background: black;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
+        @include buttonStyle;
+        text-transform: none;
+        margin-top: 15px;
       }
     }
   }
@@ -137,5 +144,22 @@
         color: #333;
       }
     }
+  }
+}
+
+@media (max-width: $mobile) {
+  .order-card .order-header {
+    display: flex;
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 0.4rem; 
+  }
+
+  .order-card .order-header .order-status {
+    order: 2; 
+  }
+
+  .order-card .order-header .order-id {
+    order: 1;
   }
 }

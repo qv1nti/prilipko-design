@@ -7,6 +7,8 @@ export default function Home() {
     <Layout>
       <div className="content_wrapper">
         <p>Ласкаво просимо до Prilipko Design!</p>
+        <p>Welcome to Prilipko Design!</p>
+        <p>プリリプコ・デザインによろしく！</p>
       </div>
     </Layout>
   );
