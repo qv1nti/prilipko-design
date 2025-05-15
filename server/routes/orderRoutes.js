@@ -57,4 +57,29 @@ router.patch("/:id/confirm", requiredAdmin, async (req, res) => {
   }
 });
 
+// PUT /api/orders/:id — редагування замовлення (тільки для адміна)
+router.put("/:id", requiredAdmin, async (req, res) => {
+  try {
+    const updatedOrder = await Order.findByIdAndUpdate(
+      req.params.id,
+      {
+        email: req.body.email,
+        phone: req.body.phone,
+        items: req.body.items,
+        total: req.body.total,
+        status: req.body.status,
+      },
+      { new: true }
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: "Замовлення не знайдено" });
+    }
+
+    res.json(updatedOrder);
+  } catch (err) {
+    res.status(500).json({ message: "Помилка оновлення замовлення", error: err.message });
+  }
+});
+
 module.exports = router;

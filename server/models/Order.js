@@ -28,6 +28,11 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+    status: {
+    type: String,
+    enum: ["Очікує", "Підтверджено", "Виконано", "Скасовано"],
+    default: "Очікує",
+  }
 });
 
 module.exports = mongoose.model("Order", orderSchema);
