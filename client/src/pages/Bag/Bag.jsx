@@ -2,16 +2,19 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Layout from "../../layout/Layout";
 import { removeFromBag, updateQuantity } from "../../store/bagSlice";
+import { useNavigate } from "react-router-dom";
 import "./Bag.scss";
 
+
 const Bag = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const items = useSelector((state) => state.bag.items);
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shipping = 30;
   const tax = 0;
   const total = subtotal + shipping + tax;
-
+  
   return (
     <Layout>
       <div className="bag-wrapper">
@@ -59,7 +62,9 @@ const Bag = () => {
               <span>ESTIMATED TOTAL</span>
               <span><strong>${total.toFixed(2)}</strong></span>
             </div>
-            <button className="checkout">CHECKOUT</button>
+            <button className="checkout" onClick={() => navigate("/checkout")}>
+              CHECKOUT
+            </button>
             <p className="terms">
               By continuing to checkout, I agree to the <a href="#">Terms & Conditions</a>, <a href="#">Privacy Policy</a>, and <a href="#">Returns Policy</a>.
             </p>

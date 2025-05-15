@@ -10,6 +10,8 @@ import Shop from "./pages/Shop/Shop";
 import ProductPage from "./pages/Shop/ProductPage";
 import Bag from "./pages/Bag/Bag";
 import Checkout from "./pages/Checkout/Checkout";
+import CheckoutEntry from "./pages/Checkout/CheckoutEntry";
+import CheckoutLogin from "./pages/Checkout/CheckoutLogin";
 
 function App() {
   return (
@@ -20,7 +22,9 @@ function App() {
         <Route path="/shop/product/:id" element={<ProductPage />} />
         <Route path="/shop/:gender?" element={<Shop />} />  
         <Route path="/bag" element={<Bag />} />  
-        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/checkout" element={<CheckoutEntry />} />
+        <Route path="/checkout/login" element={<CheckoutLogin />} />
+        <Route path="/checkout/form" element={<Checkout />} />
         <Route
           path="/profile"
           element={
