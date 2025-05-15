@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../store/authSlice";
 import Layout from "../../layout/Layout";
 import "./Login.scss";
 
-// ✅ Перевірка формату українського телефону
-const isValidPhone = (phone) => {
-  const regex = /^\+380\d{9}$/;
-  return regex.test(phone);
-};
+const isValidPhone = (phone) => /^\+380\d{9}$/.test(phone);
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -22,6 +20,7 @@ const Login = () => {
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -34,7 +33,6 @@ const Login = () => {
     e.preventDefault();
     setError("");
 
-    // 🔐 Валідація для реєстрації
     if (!isLogin) {
       if (formData.password !== formData.confirmPassword) {
         setError("Passwords do not match.");
@@ -66,11 +64,10 @@ const Login = () => {
       const res = await axios.post(url, payload);
       const { token, user } = res.data;
 
-      // 💾 Збереження в localStorage
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token); //  тільки токен
+      dispatch(setUser(user));               //  зберігаємо user у Redux
 
-      // 🔁 Перенаправлення за роллю
+      // Перенаправлення за роллю
       if (user.role === "admin") {
         navigate("/admin");
       } else {

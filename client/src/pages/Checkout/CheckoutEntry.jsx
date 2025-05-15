@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
+import { useSelector } from "react-redux";
 
 const CheckoutEntry = () => {
   const navigate = useNavigate();
-  const { user } = useAuth(); 
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     if (user) {
@@ -14,7 +14,7 @@ const CheckoutEntry = () => {
     }
   }, [user, navigate]);
 
-  return null; 
+  return null;
 };
 
 export default CheckoutEntry;

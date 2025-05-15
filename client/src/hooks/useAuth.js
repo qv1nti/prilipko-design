@@ -1,23 +1,16 @@
-// src/components/useAuth.js
+import { useSelector } from "react-redux";
+
 export default function useAuth() {
+  const user = useSelector((state) => state.auth.user);
   const token = localStorage.getItem("token");
 
-  let user = null;
-  try {
-    const raw = localStorage.getItem("user");
-    user = raw ? JSON.parse(raw) : null;
-  } catch (err) {
-    console.error("Помилка при читанні користувача з localStorage:", err.message);
-    user = null;
-  }
-
-  const isAuthenticated = Boolean(token && user && user.id);
+  const isAuthenticated = Boolean(user && token);
   const isAdmin = user?.role === "admin";
 
   return {
     token,
     user,
     isAuthenticated,
-    isAdmin
+    isAdmin,
   };
 }

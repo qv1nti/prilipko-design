@@ -1,26 +1,26 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import useAuth from "../../hooks/useAuth";
+import { useSelector, useDispatch } from "react-redux";
+import { logoutUser } from "../../store/authSlice";
 import "./Header.scss";
 import mainLogo from "../../img/main_logo.svg";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showShopSub, setShowShopSub] = useState(false);
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const dispatch = useDispatch();
+
+  const items = useSelector((state) => state.bag.items);
+  const user = useSelector((state) => state.auth.user);
+  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    dispatch(logoutUser());
     navigate("/login");
   };
-
-  const [showShopSub, setShowShopSub] = useState(false);
-  const items = useSelector((state) => state.bag.items);
-  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <header className="prilipko-header">
@@ -50,11 +50,12 @@ const Header = () => {
       </a>
 
       <div className="prilipko-topbar">
-
         <div className="topbar-links">
-          {isAuthenticated ? (
+          {user ? (
             <div className="user-dropdown">
-              <Link to="/profile">{"MY ACCOUNT" || "PROFILE"}</Link>
+              <Link to="/profile">
+                {"MY ACCOUNT"}
+              </Link>
               <div className="logout-hover">
                 <button onClick={handleLogout}>LOGOUT</button>
               </div>
