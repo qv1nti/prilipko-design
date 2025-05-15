@@ -1,11 +1,12 @@
 const jwt = require("jsonwebtoken");
 
-// Перевіряє, що користувач залогінений
-const authMiddleware = (req, res, next) => {
+// 🔐 Middleware: авторизований користувач
+const required = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Unauthorized" });
   }
+
   const token = authHeader.split(" ")[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -13,19 +14,42 @@ const authMiddleware = (req, res, next) => {
     req.userRole = decoded.role;
     next();
   } catch (err) {
-    return res.status(401).json({ message: "Unauthorized", error: err.message });
+    return res.status(401).json({ message: "Invalid token", error: err.message });
   }
 };
 
-// Дозволяє доступ лише адміну
-const adminMiddleware = (req, res, next) => {
-  if (req.userRole !== "admin") {
-    return res.status(403).json({ message: "Forbidden: лише для адміністратора" });
+// 🔐 Middleware: лише для адміністратора
+const requiredAdmin = (req, res, next) => {
+  required(req, res, () => {
+    if (req.userRole !== "admin") {
+      return res.status(403).json({ message: "Forbidden: admin only" });
+    }
+    next();
+  });
+};
+
+// 🟡 Middleware: не обов’язкова авторизація
+const optional = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return next(); // неавторизований — дозволити
   }
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.userId;
+    req.userRole = decoded.role;
+  } catch {
+    req.userId = null;
+    req.userRole = null;
+  }
+
   next();
 };
 
 module.exports = {
-  authMiddleware,
-  adminMiddleware,
+  required,
+  requiredAdmin,
+  optional,
 };

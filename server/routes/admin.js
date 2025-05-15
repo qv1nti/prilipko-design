@@ -1,15 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
-const { authMiddleware, adminMiddleware } = require("../middleware/authMiddleware");
+const { requiredAdmin } = require("../middleware/authMiddleware");
 
 // GET /api/admin/dashboard
-router.get("/dashboard", authMiddleware, adminMiddleware, (req, res) => {
+router.get("/dashboard", requiredAdmin, (req, res) => {
   res.json({ message: "Це адмін-панель!" });
 });
 
 // GET /api/admin/users — список користувачів
-router.get("/users", authMiddleware, adminMiddleware, async (req, res) => {
+router.get("/users", requiredAdmin, async (req, res) => {
   try {
     const users = await User.find().select("-password");
     res.json(users);
@@ -19,14 +19,14 @@ router.get("/users", authMiddleware, adminMiddleware, async (req, res) => {
 });
 
 // PUT /api/admin/users/:id — редагування користувача
-router.put("/users/:id", authMiddleware, adminMiddleware, async (req, res) => {
+router.put("/users/:id", requiredAdmin, async (req, res) => {
   const {
     role,
     isBlocked,
     firstName,
     lastName,
     phone,
-    email
+    email,
   } = req.body;
 
   try {

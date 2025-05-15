@@ -8,6 +8,7 @@ const userRoutes = require("./routes/user");
 const adminRoutes = require("./routes/admin");
 const adminProductsRoutes = require("./routes/adminProducts");
 const publicRoutes = require("./routes/publicProducts");
+const orderRoutes = require("./routes/orderRoutes");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/api/user", userRoutes);   // /api/user/profile (PUT)
 app.use("/api/admin", adminRoutes); // /api/admin
 app.use("/api/admin/products", adminProductsRoutes); //api/admin/products
 app.use("/api/products", publicRoutes); ///api/products
+app.use("/api/orders", orderRoutes);
 
 const path = require("path");
 app.use("/api/upload", require("./routes/upload"));

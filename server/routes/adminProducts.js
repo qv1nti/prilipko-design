@@ -1,20 +1,32 @@
 const express = require("express");
 const router = express.Router();
 const Product = require("../models/Product");
-const { authMiddleware, adminMiddleware } = require("../middleware/authMiddleware");
+const { requiredAdmin } = require("../middleware/authMiddleware");
 
-// GET всі товари
-router.get("/", authMiddleware, adminMiddleware, async (req, res) => {
-  const products = await Product.find();
-  res.json(products);
+// GET всі товари (тільки для адміна)
+router.get("/", requiredAdmin, async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: "Помилка при отриманні товарів", error: err.message });
+  }
 });
 
-// POST новий товар
-router.post("/", authMiddleware, adminMiddleware, async (req, res) => {
+// POST — створення нового товару (адмін)
+router.post("/", requiredAdmin, async (req, res) => {
   const { name, description, price, category, image, inStock } = req.body;
 
   try {
-    const product = new Product({ name, description, price, category, image, inStock });
+    const product = new Product({
+      name,
+      description,
+      price,
+      category,
+      image,
+      inStock,
+    });
+
     await product.save();
     res.status(201).json(product);
   } catch (err) {
@@ -22,23 +34,23 @@ router.post("/", authMiddleware, adminMiddleware, async (req, res) => {
   }
 });
 
-// PUT редагування
-router.put("/:id", authMiddleware, adminMiddleware, async (req, res) => {
+// PUT — редагування товару (адмін)
+router.put("/:id", requiredAdmin, async (req, res) => {
   try {
     const updated = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(updated);
   } catch (err) {
-    res.status(500).json({ message: "Помилка оновлення", error: err.message });
+    res.status(500).json({ message: "Помилка оновлення товару", error: err.message });
   }
 });
 
-// DELETE товар
-router.delete("/:id", authMiddleware, adminMiddleware, async (req, res) => {
+// DELETE — видалення товару (адмін)
+router.delete("/:id", requiredAdmin, async (req, res) => {
   try {
     await Product.findByIdAndDelete(req.params.id);
-    res.json({ message: "Товар видалено" });
+    res.json({ message: "Товар успішно видалено" });
   } catch (err) {
-    res.status(500).json({ message: "Помилка видалення", error: err.message });
+    res.status(500).json({ message: "Помилка видалення товару", error: err.message });
   }
 });
 
