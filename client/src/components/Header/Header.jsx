@@ -39,10 +39,17 @@ const Header = () => {
               </div>
             )}
           </div>
-
-          <Link to="#" onClick={toggleMenu}>HISTORY</Link>
+          <Link to="#" className="shop-heading" onClick={toggleMenu}>HISTORY</Link>
           <Link to="#" onClick={toggleMenu}>LOOKBOOK</Link>
         </nav>
+
+        <div className="mobile-auth">
+          {user ? (
+            <Link to="/profile" onClick={toggleMenu}>MY ACCOUNT</Link>
+          ) : (
+            <Link to="/login" onClick={toggleMenu}>LOGIN</Link>
+          )}
+        </div>
       </aside>
 
       <a className="header_middle_logo" href="/">
