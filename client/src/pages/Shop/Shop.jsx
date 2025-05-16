@@ -34,7 +34,7 @@ const Shop = () => {
                 <img src={p.image} alt={p.name} />
                 <div className="overlay">
                   <h3>{p.name}</h3>
-                  <span>{p.price} грн</span>
+                  <span>{p.price} UAH</span>
                 </div>
               </div>
             </Link>

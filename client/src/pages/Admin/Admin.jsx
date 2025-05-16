@@ -47,18 +47,6 @@ const Admin = () => {
     }, [section, token]);
   
 
-  const handleRoleChange = async (id, currentRole) => {
-    const newRole = currentRole === "admin" ? "user" : "admin";
-    await axios.put(
-      `/api/admin/users/${id}`,
-      { role: newRole },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    setUsers((prev) =>
-      prev.map((u) => (u._id === id ? { ...u, role: newRole } : u))
-    );
-  };
-
   const handleBlockToggle = async (id, isBlocked) => {
     await axios.put(
       `/api/admin/users/${id}`,
@@ -562,10 +550,10 @@ const Admin = () => {
                           handleOrderChange(order._id, "status", e.target.value)
                         }
                       >
-                        <option value="Очікує">Очікує</option>
-                        <option value="Підтверджено">Підтверджено</option>
-                        <option value="Виконано">Виконано</option>
-                        <option value="Скасовано">Скасовано</option>
+                        <option value="In procces">In procces</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Canceled">Canceled</option>
                       </select>
                     ) : (
                       order.status

@@ -30,8 +30,8 @@ const orderSchema = new mongoose.Schema({
   },
     status: {
     type: String,
-    enum: ["Очікує", "Підтверджено", "Виконано", "Скасовано"],
-    default: "Очікує",
+    enum: ["In procces", "Confirmed", "Completed", "Canceled"],
+    default: "In procces",
   }
 });
 

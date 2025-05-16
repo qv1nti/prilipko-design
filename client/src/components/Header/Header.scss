@@ -268,6 +268,7 @@
 
   .mobile-auth {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-top: 30px;
@@ -281,6 +282,20 @@
       text-decoration: none;
       text-align: center;
 
+      &:hover {
+        opacity: 0.6;
+        transition: all 0.3s;
+      }
+    }
+
+    button {
+      border: none;
+      font-size: 16px;
+      font-weight: 400;
+      color: #252525;
+      text-transform: uppercase;
+      text-decoration: none;
+      background: none;
       &:hover {
         opacity: 0.6;
         transition: all 0.3s;

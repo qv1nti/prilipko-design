@@ -46,7 +46,7 @@ const Profile = () => {
         setUserData(resProfile.data);
         setFormData(resProfile.data);
       } catch (err) {
-        console.error("❌ Помилка завантаження профілю:", err);
+        console.error("Помилка завантаження профілю:", err);
         setProfileError("Не вдалося завантажити профіль");
       }
 
@@ -57,7 +57,7 @@ const Profile = () => {
         });
         setOrders(resOrders.data);
       } catch (err) {
-        console.error("❌ Помилка завантаження замовлень:", err);
+        console.error("Помилка завантаження замовлень:", err);
       }
     };
 
@@ -185,7 +185,7 @@ const Profile = () => {
 
               <button type="submit">Save</button>
               {profileError && <p className="error">{profileError}</p>}
-              {profileSuccess && <p className="success">Профіль оновлено ✅</p>}
+              {profileSuccess && <p className="success">Профіль оновлено!</p>}
             </form>
           ) : (
             <div className="profile-info">
@@ -244,15 +244,15 @@ const Profile = () => {
           )}
 
           <div className="profile-orders">
-            <h3>Мої замовлення</h3>
+            <h3>My orders</h3>
             {orders.map((order) => (
               <div key={order._id} className="order-card">
                 <div className="order-header">
-                  <div className="order-id">№ {order._id}</div>
+                  <div className="order-id">Order #{order._id}</div>
                   <div className={`order-status ${order.status}`}>{order.status}</div>
                 </div>
-                <div className="order-info">Сума: {order.total} грн</div>
-                <div className="order-info">Дата: {new Date(order.createdAt).toLocaleDateString()}</div>
+                <div className="order-info">Total: {order.total} грн</div>
+                <div className="order-info">Date: {new Date(order.createdAt).toLocaleDateString()}</div>
                 <ul className="order-items">
                   {order.items.map((item, i) => (
                     <li key={i}>{item.name} × {item.quantity}</li>

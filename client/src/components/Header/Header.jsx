@@ -45,11 +45,15 @@ const Header = () => {
 
         <div className="mobile-auth">
           {user ? (
-            <Link to="/profile" onClick={toggleMenu}>MY ACCOUNT</Link>
+            <>
+              <Link to="/profile" onClick={toggleMenu}>MY ACCOUNT</Link>
+              <button onClick={handleLogout}>LOGOUT</button>
+            </>
           ) : (
             <Link to="/login" onClick={toggleMenu}>LOGIN</Link>
           )}
         </div>
+
       </aside>
 
       <a className="header_middle_logo" href="/">

@@ -9,6 +9,7 @@ const adminRoutes = require("./routes/admin");
 const adminProductsRoutes = require("./routes/adminProducts");
 const publicRoutes = require("./routes/publicProducts");
 const orderRoutes = require("./routes/orderRoutes");
+const feedbackRoutes = require("./routes/feedbackRoutes");
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use("/api/admin", adminRoutes); // /api/admin
 app.use("/api/admin/products", adminProductsRoutes); //api/admin/products
 app.use("/api/products", publicRoutes); ///api/products
 app.use("/api/orders", orderRoutes);
+app.use("/api/feedback", feedbackRoutes);
 
 const path = require("path");
 app.use("/api/upload", require("./routes/upload"));

@@ -8,7 +8,6 @@ const OrderSuccess = () => {
   const orderId = location.state?.orderId;
 
   if (!orderId) {
-    // Якщо зайшов вручну без замовлення — редирект
     return <Navigate to="/" />;
   }
 
